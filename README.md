@@ -1,6 +1,20 @@
 # SD5GSim
 SD5GSim is a network simulator to simulate network performance under different circumstances using different simulation parameter.
 
+# Required Libraries:
+* tkinter library
+* threading  library
+* concurrent.futures library
+* pprint library
+* datetime as dt library
+* defaultdict library
+* pandas as pd library
+* random library
+* uuid library
+* PIL library
+* time library
+* ttk library
+* matplotlib.pyplot as plt library
 
 # Classes
 ## basestation: 
