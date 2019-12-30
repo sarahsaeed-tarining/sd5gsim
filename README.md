@@ -135,3 +135,9 @@ This component includes a strip of icons used to perform certain functions, as g
 This component used to visualize the network after building it using "Generate Environment" option. It includes icons for basestations and PNs and their coordinates (location) in the network.
 ### Status bar component: 
 This status bar shows information for the current selected cell, like number of PNs, number of channels and basestation ID.
+
+# Contributors:
+* Sarah Saeed
+* Yaser Jararweh
+* Haythem Bany Salameh
+
