@@ -1,6 +1,30 @@
 # SD5GSim
 SD5GSim is a network simulator to simulate network performance under different circumstances using different simulation parameter.
 
+# INSTALLATION AND RUNNING  
+To install SD5GSim, you can use the following command:
+
+**pip install sd5gsim==0.2**
+
+**Important Note:** Make sure to download the following icons and put them in your project directory:
+* run.png
+* gen.png
+* exit.png
+* clear.png
+* icon3.png
+* icon2.png
+* icon5.png
+* icon4.png
+
+**Then to run the simulator you can simply run the following commands:**
+
+```python
+from sd5gsim import main
+main()
+```
+
+# SD5GGSim GUI Snapshots 
+
 # Required Libraries:
 * tkinter library
 * threading  library
@@ -124,6 +148,7 @@ used in the connections
 * power: the transmission power for the antenna.
 ## SD5GSim_GUI:
 **This class is the network simulator GUI. Where the interface includes the following components:**
+![SD5GSim](https://user-images.githubusercontent.com/59348176/71614636-dce1a000-2b7a-11ea-9384-69d80c99e7df.png)
 ### Network parameters component:
 In this component, the user can select different parameters to build the network simulation environment, including:
 * Number of cells
