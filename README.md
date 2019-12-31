@@ -2,7 +2,7 @@
 SD5GSim is a network simulator to simulate network performance under different circumstances using different simulation parameter.
 
 # INSTALLATION AND RUNNING  
-To install SD5GSim, you can use the following command:
+To install SD5GSim, you can use the following command on your command prompt:
 
 **pip install sd5gsim==0.2**
 
