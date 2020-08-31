@@ -1,2 +1,6 @@
+datetime
 matplotlib
+pandas
+Pillow
 sd5gsim==0.2
+uuid
