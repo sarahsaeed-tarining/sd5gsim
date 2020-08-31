@@ -26,19 +26,11 @@ main()
 # SD5GGSim GUI Snapshots 
 
 # Required Libraries:
-* tkinter library
-* threading  library
-* concurrent.futures library
-* pprint library
-* datetime as dt library
-* defaultdict library
-* pandas as pd library
-* random library
-* uuid library
-* PIL library
-* time library
-* ttk library
-* matplotlib.pyplot as plt library
+Required libraries may be installed via `pip` by running the following command from the root directory of this project.
+
+```
+pip install -r requirements.txt
+```
 
 # Classes
 ## basestation: 
