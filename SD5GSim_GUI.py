@@ -10,6 +10,7 @@ import node
 import v_node
 import channel
 import antenna
+from ToolTip import ToolTip
 
 
 class SD5GSim_GUI:
@@ -111,17 +112,17 @@ class SD5GSim_GUI:
 
         self.gen_butt = Button(self.toolbar, image=self.render3, text="Generate Envirnment", command=lambda: self.generate_environment_2(self.entry1.get(), self.entry2.get(), self.entry3.get(), self.entry4.get(), self.entry5.get(), self.entry6.get()), bg='#008080')
         self.gen_butt.pack(side=LEFT, padx=2, pady=2)
-        CreateToolTip(self.gen_butt, text='Generate Envirnment')
+        self.CreateToolTip(self.gen_butt, text='Generate Envirnment')
         self.run_butt = Button(self.toolbar, image=self.render2, text="Start Simulation", command=lambda: self.get_sim_args(self.entry1.get(), self.entry2.get(), self.entry3.get(), self.entry4.get(), self.entry5.get(), self.entry6.get()), bg='#008080')
         self.run_butt.pack(side=LEFT, padx=2, pady=2)
-        CreateToolTip(self.run_butt, text='Start Simulation')
+        self.CreateToolTip(self.run_butt, text='Start Simulation')
         self.clear_butt = Button(self.toolbar, image=self.render5, text="Clear Environment", command=lambda: self.clear_frame(self.right_frame), bg='#008080')
         self.clear_butt.pack(side=LEFT, padx=2, pady=2)
-        CreateToolTip(self.clear_butt, text='Clear Environment')
+        self.CreateToolTip(self.clear_butt, text='Clear Environment')
 
         self.exit_butt = Button(self.toolbar, image=self.render4, text="Exit", command=self.root.destroy, bg='#008080')
         self.exit_butt.pack(side=LEFT, padx=2, pady=2)
-        CreateToolTip(self.exit_butt, text='Exit Simulator')
+        self.CreateToolTip(self.exit_butt, text='Exit Simulator')
 
         self.toolbar.pack(side=TOP, fill=X)
         ############################
@@ -214,3 +215,14 @@ class SD5GSim_GUI:
         self.label8['text'] = str(avg_throughput)
         self.label10['text'] = str(avg_blocking_rate)
         self.label14['text'] = str(avg_overhead)
+    
+    def CreateToolTip(self, widget, text):
+        toolTip = ToolTip(widget)
+
+        def enter(event):
+            toolTip.showtip(text)
+
+        def leave(event):
+            toolTip.hidetip()
+        widget.bind('<Enter>', enter)
+        widget.bind('<Leave>', leave)

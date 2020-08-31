@@ -7,21 +7,8 @@ import node
 import v_node
 import antenna
 import channel
-import ToolTip
-import SD5GSim_GUI
+from SD5GSim_GUI import SD5GSim_GUI
 from tkinter import *
-
-
-def CreateToolTip(widget, text):
-    toolTip = ToolTip(widget)
-
-    def enter(event):
-        toolTip.showtip(text)
-
-    def leave(event):
-        toolTip.hidetip()
-    widget.bind('<Enter>', enter)
-    widget.bind('<Leave>', leave)
 
 
 def run_io_tasks_in_parallel(tasks):
