@@ -1,16 +1,19 @@
 from tkinter import *
 from PIL import Image, ImageTk
+from random import randrange
 import time
 from tkinter import ttk
 from collections import defaultdict
 import random
 from statistics import mean
-import basestation
-import node
+from basestation import basestation
+from node import node
 import v_node
 import channel
 import antenna
-
+from ToolTip import ToolTip
+from concurrent.futures import ThreadPoolExecutor
+import threading
 
 class SD5GSim_GUI:
     def __init__(self, root):
@@ -111,24 +114,24 @@ class SD5GSim_GUI:
 
         self.gen_butt = Button(self.toolbar, image=self.render3, text="Generate Envirnment", command=lambda: self.generate_environment_2(self.entry1.get(), self.entry2.get(), self.entry3.get(), self.entry4.get(), self.entry5.get(), self.entry6.get()), bg='#008080')
         self.gen_butt.pack(side=LEFT, padx=2, pady=2)
-        CreateToolTip(self.gen_butt, text='Generate Envirnment')
+        self.CreateToolTip(self.gen_butt, text='Generate Envirnment')
         self.run_butt = Button(self.toolbar, image=self.render2, text="Start Simulation", command=lambda: self.get_sim_args(self.entry1.get(), self.entry2.get(), self.entry3.get(), self.entry4.get(), self.entry5.get(), self.entry6.get()), bg='#008080')
         self.run_butt.pack(side=LEFT, padx=2, pady=2)
-        CreateToolTip(self.run_butt, text='Start Simulation')
+        self.CreateToolTip(self.run_butt, text='Start Simulation')
         self.clear_butt = Button(self.toolbar, image=self.render5, text="Clear Environment", command=lambda: self.clear_frame(self.right_frame), bg='#008080')
         self.clear_butt.pack(side=LEFT, padx=2, pady=2)
-        CreateToolTip(self.clear_butt, text='Clear Environment')
+        self.CreateToolTip(self.clear_butt, text='Clear Environment')
 
         self.exit_butt = Button(self.toolbar, image=self.render4, text="Exit", command=self.root.destroy, bg='#008080')
         self.exit_butt.pack(side=LEFT, padx=2, pady=2)
-        CreateToolTip(self.exit_butt, text='Exit Simulator')
+        self.CreateToolTip(self.exit_butt, text='Exit Simulator')
 
         self.toolbar.pack(side=TOP, fill=X)
         ############################
         self.status = Label(self.root, text=" ", bd=1, relief=SUNKEN, anchor=W)
         self.status.pack(side=BOTTOM, fill=X)
 
-    def doNothing():
+    def doNothing(self):
         print("Works!!")
 
     def clear_frame(self, frame):
@@ -191,12 +194,12 @@ class SD5GSim_GUI:
         max_time = int(sim_time)
         start_time = time.time()  # remember when we started
         while (time.time() - start_time) < max_time:
-            run_io_tasks_in_parallel([
-                lambda: start_simulation(bss[0]),
-                lambda: start_simulation(bss[1]),
-                lambda: start_simulation(bss[2]),
-                lambda: start_simulation(bss[3]),
-                lambda: start_simulation(bss[4]),
+            self.run_io_tasks_in_parallel([
+                lambda: self.start_simulation(bss[0]),
+                lambda: self.start_simulation(bss[1]),
+                lambda: self.start_simulation(bss[2]),
+                lambda: self.start_simulation(bss[3]),
+                lambda: self.start_simulation(bss[4]),
             ])
 
         metrics = defaultdict(list)
@@ -214,3 +217,58 @@ class SD5GSim_GUI:
         self.label8['text'] = str(avg_throughput)
         self.label10['text'] = str(avg_blocking_rate)
         self.label14['text'] = str(avg_overhead)
+    
+    def CreateToolTip(self, widget, text):
+        toolTip = ToolTip(widget)
+
+        def enter(event):
+            toolTip.showtip(text)
+
+        def leave(event):
+            toolTip.hidetip()
+        widget.bind('<Enter>', enter)
+        widget.bind('<Leave>', leave)
+        
+    def run_io_tasks_in_parallel(self, tasks):
+        with ThreadPoolExecutor() as executor:
+            running_tasks = [executor.submit(task) for task in tasks]
+            for running_task in running_tasks:
+                running_task.result()
+                
+    def start_simulation(self, bs):
+        MIN_PACKET_COUNT = 100
+        MAX_PACKET_COUNT = 500
+        REQUEST_PROBABILITY = 0.85
+
+        req_prob = random.uniform(0, 1)
+        if req_prob < REQUEST_PROBABILITY:
+            (sen_nd, rec_nd) = random.choices(bs.bs_nodes, k=2)
+            sen_vn = sen_nd.activate_v_node()
+            rec_vn = rec_nd.activate_v_node()
+            src_ant = sen_nd.activate_ant()
+            des_ant = rec_nd.activate_ant()
+            num_of_pkts = randrange(MIN_PACKET_COUNT, MAX_PACKET_COUNT)
+            bs.num_control_msg += 1
+
+            if all(instance is not None for instance in [sen_vn, rec_vn, src_ant, des_ant]):
+                req_attrs = {
+                    "src_node": sen_nd,
+                    "src_vnode": sen_vn,
+                    "src_ant": src_ant,
+                    "des_node": rec_nd,
+                    "des_vnode": rec_vn,
+                    "des_ant": des_ant
+                }
+                bs.num_of_reqs += 1
+                src_ch = bs.assing_ch_to_node(**req_attrs)
+                req_attrs["src_ch"] = src_ch
+                req_attrs["num_of_pkts"] = num_of_pkts
+                if src_ch is not None:
+                    bs.utilized_channels += 1
+                    curr_attrs = req_attrs
+                    tx_time = bs.calculate_tx_time(num_of_pkts)
+                    timer = threading.Timer(tx_time, lambda: bs.terminate_connection(**curr_attrs))
+                    timer.start()
+                else:
+                    bs.num_of_blocked_reqs += 1
+                    pass
