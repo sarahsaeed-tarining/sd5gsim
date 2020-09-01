@@ -1,4 +1,3 @@
-from concurrent.futures import ThreadPoolExecutor
 import threading
 from random import randrange
 import random
@@ -9,13 +8,6 @@ import antenna
 import channel
 from SD5GSim_GUI import SD5GSim_GUI
 from tkinter import *
-
-
-def run_io_tasks_in_parallel(tasks):
-    with ThreadPoolExecutor() as executor:
-        running_tasks = [executor.submit(task) for task in tasks]
-        for running_task in running_tasks:
-            running_task.result()
 
 
 def start_simulation(bs):

@@ -11,6 +11,7 @@ import v_node
 import channel
 import antenna
 from ToolTip import ToolTip
+from concurrent.futures import ThreadPoolExecutor
 
 
 class SD5GSim_GUI:
@@ -192,7 +193,7 @@ class SD5GSim_GUI:
         max_time = int(sim_time)
         start_time = time.time()  # remember when we started
         while (time.time() - start_time) < max_time:
-            run_io_tasks_in_parallel([
+            self.run_io_tasks_in_parallel([
                 lambda: start_simulation(bss[0]),
                 lambda: start_simulation(bss[1]),
                 lambda: start_simulation(bss[2]),
@@ -226,3 +227,9 @@ class SD5GSim_GUI:
             toolTip.hidetip()
         widget.bind('<Enter>', enter)
         widget.bind('<Leave>', leave)
+        
+    def run_io_tasks_in_parallel(self, tasks):
+        with ThreadPoolExecutor() as executor:
+            running_tasks = [executor.submit(task) for task in tasks]
+            for running_task in running_tasks:
+                running_task.result()
