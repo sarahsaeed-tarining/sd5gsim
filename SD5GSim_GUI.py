@@ -5,8 +5,8 @@ from tkinter import ttk
 from collections import defaultdict
 import random
 from statistics import mean
-import basestation
-import node
+from basestation import basestation
+from node import node
 import v_node
 import channel
 import antenna

@@ -1,6 +1,8 @@
 import uuid
 from random import randrange
 import matplotlib.pyplot as plt
+from node import node
+from channel import channel
 
 
 class basestation:

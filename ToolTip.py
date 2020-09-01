@@ -1,3 +1,5 @@
+from tkinter import *
+
 class ToolTip(object):
 
     def __init__(self, widget):

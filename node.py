@@ -2,9 +2,9 @@ import uuid
 from pprint import pprint
 from random import randrange
 import basestation
-import v_node
+from v_node import v_node
 import channel
-import antenna
+from antenna import antenna
 
 
 class node:
