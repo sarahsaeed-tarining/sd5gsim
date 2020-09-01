@@ -131,7 +131,7 @@ class SD5GSim_GUI:
         self.status = Label(self.root, text=" ", bd=1, relief=SUNKEN, anchor=W)
         self.status.pack(side=BOTTOM, fill=X)
 
-    def doNothing():
+    def doNothing(self):
         print("Works!!")
 
     def clear_frame(self, frame):
