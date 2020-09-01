@@ -3,7 +3,7 @@ from random import randrange
 import matplotlib.pyplot as plt
 from node import node
 from channel import channel
-
+from connection import connection
 
 class basestation:
     def __init__(self, **kwargs):

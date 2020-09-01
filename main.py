@@ -1,5 +1,3 @@
-import threading
-from random import randrange
 import random
 import basestation
 import node
@@ -8,46 +6,6 @@ import antenna
 import channel
 from SD5GSim_GUI import SD5GSim_GUI
 from tkinter import *
-
-
-def start_simulation(bs):
-    MIN_PACKET_COUNT = 100
-    MAX_PACKET_COUNT = 500
-    REQUEST_PROBABILITY = 0.85
-
-    req_prob = random.uniform(0, 1)
-    if req_prob < REQUEST_PROBABILITY:
-        (sen_nd, rec_nd) = random.choices(bs.bs_nodes, k=2)
-        sen_vn = sen_nd.activate_v_node()
-        rec_vn = rec_nd.activate_v_node()
-        src_ant = sen_nd.activate_ant()
-        des_ant = rec_nd.activate_ant()
-        num_of_pkts = randrange(MIN_PACKET_COUNT, MAX_PACKET_COUNT)
-        bs.num_control_msg += 1
-
-        if all(instance is not None for instance in [sen_vn, rec_vn, src_ant, des_ant]):
-            req_attrs = {
-                "src_node": sen_nd,
-                "src_vnode": sen_vn,
-                "src_ant": src_ant,
-                "des_node": rec_nd,
-                "des_vnode": rec_vn,
-                "des_ant": des_ant
-            }
-            bs.num_of_reqs += 1
-            src_ch = bs.assing_ch_to_node(**req_attrs)
-            req_attrs["src_ch"] = src_ch
-            req_attrs["num_of_pkts"] = num_of_pkts
-            if src_ch is not None:
-                bs.utilized_channels += 1
-                curr_attrs = req_attrs
-                tx_time = bs.calculate_tx_time(num_of_pkts)
-                timer = threading.Timer(tx_time, lambda: bs.terminate_connection(**curr_attrs))
-                timer.start()
-            else:
-                bs.num_of_blocked_reqs += 1
-                pass
-
 
 def main():
     root = Tk()
